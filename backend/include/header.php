@@ -242,6 +242,18 @@
                         <li>
                             <a href="product.php"><i class="fa fa-bus"></i> Product</a>
                         </li>
+
+                        <li>
+                            <a href="district.php"><i class="fa fa-leaf"></i> District</a>
+                        </li>
+
+                        <li>
+                            <a href="newsletter.php"><i class="fa fa-send"></i> News Letter</a>
+                        </li>
+
+                        <li>
+                            <a href="uploadimage.php"><i class="fa fa-image"></i> Upload Image</a>
+                        </li>
                         
                     </ul>
                 </div>

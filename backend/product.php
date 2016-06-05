@@ -1,6 +1,44 @@
 <?php 
     include '../include/connectdb.php';
 
+    /***** ส่วนของการลบข้อมูล ********/
+    if($_GET['id'])
+    {
+        $sql_delete = "DELETE FROM product WHERE prd_id='$_GET[id]'";
+        $query_delete = mysqli_query($connect,$sql_delete);
+    }
+
+    /***** การบันทึกข้อมูลลงตาราง product ********/
+    if($_POST['submit'])
+    {
+        // รับค่าจากฟอร์ม
+        $category           = $_POST['category'];
+        $product_name = $_POST['product_name'];
+        $product_price  = $_POST['product_price'];
+        $menufact          = $_POST['menufact'];
+
+            // ตรวจสอบว่าป้อนข้อมูลครบหรือไม่
+            if(!empty($category) and !empty($product_name) 
+                and !empty($product_price) and !empty($menufact))
+            {
+                 // บันทึกข้อมูล
+                 $sql_add = "INSERT INTO product(category_id,prdname,price,menufac_id,status) 
+                                     VALUES('$category','$product_name','$product_price','$menufact','1')";
+                $query_add = mysqli_query($connect,$sql_add);
+
+                if($query_add){
+                    $msg = "<div class='alert alert-success'>บันทึกรายการเรียบร้อย</div>";
+                }else{
+                    $msg = "<div class='alert alert-danger'>ผิดพลาด ไม่สามารถบันึกได้</div>";
+                }
+
+            }else{
+                // แจ้งเตือน
+                $msg = "<div class='alert alert-danger'>กรอกข้อมูลให้ครบก่อน</div>";
+            }
+    }
+
+    /***** การดึงข้อมูลจากตาราง product ************/
     $sql      = "SELECT * FROM product INNER JOIN (category,manufacturer) ON
                     (product.category_id=category.category_id and 
                      product.menufac_id=manufacturer.menufac_id)";
@@ -78,6 +116,8 @@
                         </div>
                         <hr>
 
+                        <?php echo $msg; ?>
+
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
@@ -87,6 +127,7 @@
                                     <th>Price</th>
                                     <th>Menufacturer</th>
                                     <th>Status</th>
+                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -101,6 +142,7 @@
                                             <td>$data[price]</td>
                                             <td>$data[menufacname]</td>
                                             <td>$data[status]</td>
+                                            <td><a href='product.php?id=$data[prd_id]' class='btn btn-xs btn-danger' onclick='return confirm(\"ยืนยันการลบข้อมูล\")'>Delete</a></td>
                                         </tr>";
                                     }
                                 ?>
@@ -143,7 +185,7 @@
                 </div>
                 <div class="modal-body">
                     
-                    <form action="" method="POST" role="form">
+                    <form action="product.php" method="post" role="form">
                         
                         <div class="form-group">
                             <label>หมวดหมู่</label>
